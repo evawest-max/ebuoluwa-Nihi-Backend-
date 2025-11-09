@@ -10,7 +10,8 @@ import connectDB from "./config/db.js";
 import authRoutes from "./routes/auth.routes.js";
 import itemRoutes from "./routes/item.routes.js";
 // import paymentRoutes from "./routes/payment.routes.js";
-import paymentsRoutes from "./routes/payment.routes.js";
+import paymentRoutes from "./routes/payment.routes.js";
+import paymentTransactionRoutes from "./routes/paymentTransaction.route.js";
 import chatRoutes from "./routes/chat.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
 import notificationRoutes from "./routes/notification.routes.js";
@@ -73,7 +74,8 @@ app.use("/api/testimony/featured", getFeaturedTestimonies);
 app.use("/api/testimony/approved", getapprovedTestimonies);
 app.use('/api', donationRequestRoutes);
 app.use('/api', offerRoutes);
-app.use("/api/payment", paymentsRoutes);
+app.use("/api/payment", paymentRoutes);
+app.use("/api/auth", paymentTransactionRoutes)
 
 
 // Root route

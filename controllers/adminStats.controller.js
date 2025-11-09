@@ -34,7 +34,7 @@ export const getDashboardStats = async (req, res) => {
     const totalDonations = await Item.countDocuments({ transactionType: "donation" });
     const totalSales = await Item.countDocuments({ transactionType: "sale" });
     const totalRequests = await Item.countDocuments({ transactionType: "request" });
-    const totalPayments = await Payment.countDocuments({ status: "successful" });
+    const totalPayments = await Payment.countDocuments({ status: "pending" });
     const totalTestimony = await testimonyModel.countDocuments();
 
     // ✅ Sum all approved proof of payments
@@ -48,9 +48,22 @@ export const getDashboardStats = async (req, res) => {
         },
       },
     ]);
+    // ✅ Sum all approved proof of payments
+    const transactionAggregation = await Payment.aggregate([
+      { $match: { status: "success" } },
+      {
+        $group: {
+          _id: null,
+          totalAmount: { $sum: "$amount" },
+          totalProofs: { $sum: 1 },
+        },
+      },
+    ]);
 
     const totalProofs = proofAggregation.length > 0 ? proofAggregation[0].totalProofs : 0;
     const totalProofAmount = proofAggregation.length > 0 ? proofAggregation[0].totalAmount : 0;
+    const totalTransaction = transactionAggregation.length > 0 ? transactionAggregation[0].totalAmount : 0;
+
 
     res.json({
       totalUsers,
@@ -61,7 +74,8 @@ export const getDashboardStats = async (req, res) => {
       totalPayments,
       totalProofs,
       totalProofAmount,
-      totalTestimony
+      totalTestimony,
+      totalTransaction
     });
   } catch (error) {
     console.error("❌ Dashboard stats error:", error);

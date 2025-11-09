@@ -4,11 +4,11 @@ dotenv.config();
 // import Payment from "../models/payment.model.js";
 import crypto from "crypto";
 import { sendEmail } from "../utils/sendEmail.js";
-import payment from "../models/Payment.model.js";
+import paymentz from "../models/Payment.model.js";
 
 export const initializePayment = async (req, res) => {
   try {
-    const { amount, email, userId } = req.body;
+    const { amount, email, userId, items } = req.body;
     console.log(req.body)
 
     if (!amount || !email || !userId)
@@ -32,7 +32,7 @@ export const initializePayment = async (req, res) => {
     );
 
     // Save payment
-    await payment.create({
+    await paymentz.create({
       userId,
       email,
       amount,
@@ -54,6 +54,8 @@ export const initializePayment = async (req, res) => {
 export const verifyPayment = async (req, res) => {
   try {
     const { reference } = req.params;
+
+    // Verify payment with Paystack
     const response = await axios.get(
       `https://api.paystack.co/transaction/verify/${reference}`,
       {
@@ -62,27 +64,46 @@ export const verifyPayment = async (req, res) => {
         },
       }
     );
-    console.log(reference)
-    const payment = await payment.findOne( reference );
-    if (!payment)
-      return res.status(404).json({ message: "Payment record not found" });
 
-    if (response.data.status=="true") {
-      console.log(response.data.data.status)
+    const paystackData = response.data.data;
+    if (!paystackData) {
+      return res.status(400).json({ message: "Invalid Paystack response" });
+    }
+
+    // Find payment record in your database
+    let payment = await paymentz.findOne({ reference });
+    if (!payment) {
+      return res.status(404).json({ message: "Payment record not found" });
+    }
+
+    // Update status based on Paystack response
+    if (paystackData.status === "success") {
       payment.status = "success";
+      payment.paidAt = paystackData.paid_at || new Date();
       await payment.save();
 
+      // Send success email
       await sendEmail({
         to: payment.email,
-        subject: "Payment Successful 🎉",
-        html: `<p>Your payment of ₦${payment.amount} was successful!</p>`,
+        subject: "🎉 Payment Successful",
+        html: `
+          <div style="font-family: Arial, sans-serif; color: #333;">
+            <h2>Payment Confirmation</h2>
+            <p>Hi,</p>
+            <p>Your payment of <strong>₦${(payment.amount / 100).toLocaleString()}</strong> was successful!</p>
+            <p>Reference: <strong>${payment.reference}</strong></p>
+            <br/>
+            <p>Thank you for your payment.</p>
+            <p>— The NIHI Team</p>
+          </div>
+        `,
       });
 
-      res.status(200).json({ message: "Payment verified successfully" });
+      return res.status(200).json({ message: "Payment verified successfully" });
     } else {
       payment.status = "failed";
       await payment.save();
-      res.status(400).json({ message: "Payment failed" });
+      return res.status(400).json({ message: "Payment failed" });
     }
   } catch (error) {
     console.error("❌ Verify Payment Error:", error.message);
@@ -106,7 +127,7 @@ export const paystackWebhook = async (req, res) => {
     if (event.event === "charge.success") {
       const data = event.data;
 
-      const payment = await Payment.findOne({ reference: data.reference });
+      const payment = await paymentz.findOne({ reference: data.reference });
       if (payment) {
         payment.status = "success";
         await payment.save();

@@ -5,8 +5,7 @@ import { sendEmail } from "../utils/sendEmail.js";
 
 export const createOffer = async (req, res) => {
     console.log("✅ Hit createOffer route");
-    console.log("✅ Raw request body:", req.body);
-    
+    console.log("✅ Raw request body:", req.body);  
     try {
 
         const {

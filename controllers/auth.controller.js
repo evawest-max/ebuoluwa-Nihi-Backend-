@@ -78,14 +78,14 @@ export const register = async (req, res) => {
   </p>
 
   <p style="font-size: 15px;">
-    To complete your registration, please verify your email address by clicking the button below:
+    To complete your registration, please verify your email address by clicking the link below:
   </p>
 
   <p style="text-align: center; margin: 20px 0;">
-    <a href="${verifyLink}" target="_blank" style="background-color: #2e7d32; color: #fff; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold;">
+    <a href="${verifyLink}" target="_blank" style="background-color: #2e7d32; color: #fff; margin: 12px 0px; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold;">
       Verify My Email
     </a>
-    <a href="${verifyLink}" target="_blank" style="background-color: #2e7d32; color: #fff; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold;">
+    <a href="${verifyLink}" target="_blank" style="background-color: #2e7d32; color: #fff; margin: 18px 24px; text-decoration: none; border-radius: 4px; font-weight: bold;">
       ${process.env.FRONTEND_URL}/verify/${verificationToken}
     </a>
   </p>
@@ -253,7 +253,7 @@ export const resendVerificationEmail = async (req, res) => {
     await user.save();
 
     // Construct verification URL
-    const verifyUrl = `${process.env.FRONTEND_URL}/api/auth/verify/${verificationToken}`;
+    const verifyUrl = `${process.env.FRONTEND_URL}/verify/${verificationToken}`;
 
     // Email content
     const message = `
@@ -269,10 +269,10 @@ export const resendVerificationEmail = async (req, res) => {
   </p>
 
   <p style="text-align: center; margin: 20px 0;">
-    <a href="${verifyUrl}" target="_blank" style="background-color: #2e7d32; color: #fff; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold;">
+    <a href="${verifyUrl}" target="_blank" style="background-color: #2e7d32; color: #fff; margin: 12px 0px; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold;">
       Verify My Email
     </a>
-    <a href="${verifyUrl}" target="_blank" style="background-color: #2e7d32; color: #fff; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold;">
+    <a href="${verifyUrl}" target="_blank" style="background-color: #2e7d32; color: #fff; margin: 18px 24px; text-decoration: none; border-radius: 4px; font-weight: bold;">
       ${verifyUrl}
     </a>
   </p>
@@ -301,7 +301,7 @@ export const resendVerificationEmail = async (req, res) => {
     });
 
     return res.status(200).json({
-      message: "Verification email resent successfully. Please check your inbox.",
+      message: "Verification email sent successfully. Please check your inbox or spam.",
     });
   } catch (error) {
     console.error("Error resending verification email:", error);

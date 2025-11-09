@@ -24,6 +24,9 @@ const paymentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  items: [mongoose.Schema.Types.Mixed],
+  paidAt: { type: Date },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   metadata: {
     type: Object,
   },
