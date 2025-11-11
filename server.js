@@ -11,6 +11,7 @@ import authRoutes from "./routes/auth.routes.js";
 import itemRoutes from "./routes/item.routes.js";
 // import paymentRoutes from "./routes/payment.routes.js";
 import paymentRoutes from "./routes/payment.routes.js";
+import financialDonationPaymentTransactionRoutes from "./routes/financialDonationsTransactions.route.js";
 import paymentTransactionRoutes from "./routes/paymentTransaction.route.js";
 import chatRoutes from "./routes/chat.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
@@ -67,7 +68,6 @@ app.use("/api/notifications", notificationRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/user", userRoutes);
-// app.use("/api/payment", paymentRoutes);
 app.use("/api/items", itemRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/testimony/featured", getFeaturedTestimonies);
@@ -75,7 +75,9 @@ app.use("/api/testimony/approved", getapprovedTestimonies);
 app.use('/api', donationRequestRoutes);
 app.use('/api', offerRoutes);
 app.use("/api/payment", paymentRoutes);
-app.use("/api/auth", paymentTransactionRoutes)
+app.use("/api/payment", financialDonationPaymentTransactionRoutes);
+app.use("/api/auth", paymentTransactionRoutes);
+
 
 
 // Root route

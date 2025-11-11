@@ -4,11 +4,11 @@ dotenv.config();
 // import Payment from "../models/payment.model.js";
 import crypto from "crypto";
 import { sendEmail } from "../utils/sendEmail.js";
-import paymentz from "../models/Payment.model.js";
+import paymentz from "../models/financialDonationsTransactions.model.js";
 
-export const initializePayment = async (req, res) => {
+export const initializeFinancialDonationPayment = async (req, res) => {
   try {
-    const { amount, email, user, items} = req.body;
+    const { amount, user, } = req.body;
     console.log(req.body)
 
     if (!amount || !user)
@@ -34,7 +34,7 @@ export const initializePayment = async (req, res) => {
     // Save payment
     await paymentz.create({
       userId: user.id,
-      email,
+      email: user.email,
       name: user.name,
       amount,
       reference,
@@ -52,7 +52,7 @@ export const initializePayment = async (req, res) => {
   }
 };
 
-export const verifyPayment = async (req, res) => {
+export const verifyFinancialDonationPayment = async (req, res) => {
   try {
     const { reference } = req.params;
 
@@ -78,8 +78,7 @@ export const verifyPayment = async (req, res) => {
     }
 
     // Update status based on Paystack response
-    //  if (paystackData.status === "success") {
-    if (paystackData==true) {
+    if (paystackData == true) {
       payment.status = "success";
       payment.paidAt = paystackData.paid_at || new Date();
       await payment.save();
@@ -87,18 +86,21 @@ export const verifyPayment = async (req, res) => {
       // Send success email
       await sendEmail({
         to: payment.email,
-        subject: "🎉 Payment Successful",
+        subject: "Payment Confirmation – Thank You for Your Donation",
         html: `
-          <div style="font-family: Arial, sans-serif; color: #333;">
-            <h2>Payment Confirmation</h2>
-            <p>Hi,</p>
-            <p>Your payment of <strong>₦${(payment.amount / 100).toLocaleString()}</strong> was successful!</p>
-            <p>Reference: <strong>${payment.reference}</strong></p>
-            <br/>
-            <p>Thank you for your payment.</p>
-            <p>— The NIHI Team</p>
-          </div>
-        `,
+    <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
+      <h2 style="color: #2c3e50;">Payment Confirmation</h2>
+      <p>Dear Supporter,</p>
+      <p>We are pleased to inform you that your payment of 
+        <strong>₦${(payment.amount / 100).toLocaleString()}</strong> has been successfully processed.</p>
+      <p>Thank you sincerely for your generous donation to our charity. 
+        Your contribution will make a meaningful difference and help us continue supporting those in need.</p>
+      <p><strong>Reference:</strong> ${payment.reference}</p>
+      <br/>
+      <p>We deeply appreciate your support and commitment to our mission.</p>
+      <p>Warm regards,<br/>The NIHI Team</p>
+    </div>
+  `,
       });
 
       return res.status(200).json({ message: "Payment verified successfully" });

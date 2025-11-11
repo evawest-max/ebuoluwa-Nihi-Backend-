@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const paymentSchema = new mongoose.Schema({
+const FinancialDonationPaymentSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
@@ -29,7 +29,6 @@ const paymentSchema = new mongoose.Schema({
   },
   items: [mongoose.Schema.Types.Mixed],
   paidAt: { type: Date },
-  // userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   metadata: {
     type: Object,
   },
@@ -39,4 +38,4 @@ const paymentSchema = new mongoose.Schema({
   },
 });
 
-export default mongoose.model("Payment", paymentSchema);
+export default mongoose.model("Financial Donation Payments", FinancialDonationPaymentSchema);

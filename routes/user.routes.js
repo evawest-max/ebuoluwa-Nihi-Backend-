@@ -32,6 +32,7 @@ import {
   getFeaturedTestimonies,
 } from "../controllers/testimony.controller.js";
 import { createItem } from "../controllers/item.controller.js";
+import { getUserDashboardStats } from "../controllers/userStats.controller.js";
 
 const router = express.Router();
 
@@ -60,6 +61,7 @@ router.get("/get-items", getItems);
 router.get("/institutional-users", getInstitutionalUsers);
 router.get("/user-items/:userId", auth, getUserItems);
 router.get("/items/:userId/donations/count", auth, countUserDonations);
+router.get("/items/userStats/:userId", auth, getUserDashboardStats);
 router.get("/items/:userId/sales/count", auth, countUserSales);
 router.post("/request", auth, createItem);
 router.get("/request", auth, getAllRequests);
@@ -72,6 +74,7 @@ router.get("/items/approved", getApprovedItems);
 router.put("/:id", auth, updateUserProfile);
 router.get("/testimony/:id", auth, countUserTestimony);
 router.post("/testimony", auth, uploadID.single("image"), createTestimony);
+
 // router.get("/testimony/featured", getFeaturedTestimonies);
 
 export default router;
