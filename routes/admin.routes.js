@@ -18,7 +18,7 @@ import {
   rejectVerificationRequest,
 } from "../controllers/admin.controller.js";
 import { approveVerification } from "../controllers/admin.controller.js";
-import { auth } from "../middleware/auth.middleware.js";
+import { auth, isAdmin } from "../middleware/auth.middleware.js";
 import { roleCheck } from "../middleware/role.middleware.js";
 import { getDashboardStats } from "../controllers/adminStats.controller.js";
 import { approveProofOfPayment, getAllProofsOfPayment, rejectProofOfPayment } from "../controllers/user.controller.js";
@@ -29,7 +29,7 @@ const router = express.Router();
 router.use(auth, roleCheck(["admin"]));
 router.get("/users", getUsers);
 router.get("/stats", getDashboardStats);
-router.put("/users/:id/suspend", suspendUser);
+router.put("/users/:id/suspend", isAdmin, suspendUser);
 router.delete("/users/:id", deleteUser);
 router.put("/users/:id/lift", liftSuspension);
 router.put("/users/:id/role", changeUserRole);
