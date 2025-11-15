@@ -596,3 +596,4 @@ export const getUserKYCById = async (req, res) => {
     });
   }
 };
+

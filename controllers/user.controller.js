@@ -237,6 +237,9 @@ export const checkVerificationStatus = async (req, res) => {
 // };
 
 export const addItem = async (req, res) => {
+  console.log("✅ Hit createItem route");
+  console.log("✅ Raw request body:", req.body);
+  console.log("✅ Uploaded files:", req.files);
   try {
     const user = req.user;
     const { title, description, category, type, price } = req.body;
@@ -254,7 +257,7 @@ export const addItem = async (req, res) => {
 
     const validTypes = ["donation", "sale"];
     if (!validTypes.includes(type)) {
-      return res.status(400).json({ message: "Invalid type. Must be one of: donation, sale" });
+      return res.status(400).json({ message: "Invalid type. Must be one of: donation, sale, or request" });
     }
 
     // Both types now require a valid price
@@ -793,20 +796,24 @@ export const getApprovedItems = async (req, res) => {
 };
 
 export const updateUserProfile = async (req, res) => {
+  // console.log("✅ Hit createItem route");
+  // console.log("✅ Raw request body:", req.params);
+  // console.log("✅ Uploaded files:", req.body);
   try {
     const { id } = req.params;
-    const { name, email, phone, location, bio, logo } = req.body;
+    const { name, email, phone, state, bio, logo, lga } = req.body;
 
     const user = await User.findById(id);
     if (!user) return res.status(404).json({ message: "User not found" });
 
     // Update allowed fields
-    if (name) user.name = name;
-    if (email) user.email = email;
+    // if (name) user.name = name;
+    // if (email) user.email = email;
     if (phone) user.phone = phone;
-    if (location) user.state = location;
-    if (bio) user.bio = bio;
+    if (state) user.state = state 
+    if (bio?.trim()) user.bio = bio;
     if (logo) user.logo = logo;
+    if (lga) user.lga = lga;
 
     await user.save();
 

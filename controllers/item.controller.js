@@ -3,9 +3,9 @@ import userModel from "../models/user.model.js";
 
 // Create item
 export const createItem = async (req, res) => {
-  // console.log("✅ Hit createItem route");
-  // console.log("✅ Raw request body:", req.body);
-  // console.log("✅ Uploaded files:", req.files);
+  console.log("✅ Hit createItem route");
+  console.log("✅ Raw request body:", req.body);
+  console.log("✅ Uploaded files:", req.files);
   try {
     const { title, description, category, price, location, urgency, contactInfo, transactionType } = req.body;
     const donor = req.user._id;
@@ -26,7 +26,7 @@ export const createItem = async (req, res) => {
       price: price || 0,
       donor,
       images: images.length>0? images: ["https://media.istockphoto.com/id/2149167948/photo/word-request-on-speech-bubble.jpg?s=612x612&w=0&k=20&c=ovOOjZhT47nvYhdz43mEUAAHwzTZDI0IunYDZFc67nU="],
-      location, 
+      location: location || ["84848"], 
       urgency: urgency || "low",
       contactInfo: contactInfo || "Not provided",
       transactionType: transactionType || "donation",
