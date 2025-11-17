@@ -342,10 +342,12 @@ export const forgotPassword = async (req, res) => {
           <p style="text-align: center; margin: 20px 0;">
             <a href="${resetLink}" target="_blank" style="background-color: #d32f2f; color: #fff; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold;">
               Reset My Password
-            </a>
+            </a>            
+          </p>
+          <p style="text-align: center; margin: 20px 0;">
             <a href="${resetLink}" target="_blank"  color: #323232ff; padding: 24px 24px; text-decoration: none; border-radius: 4px; font-weight: bold;">
               ${resetLink}
-            </a>
+            </a>          
           </p>
           <p>This link will expire in 1 hour. If you didn’t request this, you can safely ignore this email.</p>
           <p style="margin-top: 30px; font-size: 14px; color: #777;">Best regards,<br><strong>The NIHI Team</strong></p>
