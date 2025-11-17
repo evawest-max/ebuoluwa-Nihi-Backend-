@@ -19,7 +19,7 @@ export const initializeFinancialDonationPayment = async (req, res) => {
     const response = await axios.post(
       "https://api.paystack.co/transaction/initialize",
       {
-        email:user.email,
+        email: user.email,
         amount: amount * 100, // amount in kobo
         reference,
       },
@@ -88,20 +88,32 @@ export const verifyFinancialDonationPayment = async (req, res) => {
         to: payment.email,
         subject: "Payment Confirmation – Thank You for Your Donation",
         html: `
-    <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
-      <h2 style="color: #2c3e50;">Payment Confirmation</h2>
-      <p>Dear Supporter,</p>
-      <p>We are pleased to inform you that your payment of 
+    <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px; background-color: #fafafa;">
+      <h2 style="color: #2c3e50; text-align: center;">Payment Confirmation</h2>
+      
+      <p>Dear Valued Supporter,</p>
+      
+      <p>We are pleased to confirm that your donation of 
         <strong>₦${(payment.amount / 100).toLocaleString()}</strong> has been successfully processed.</p>
-      <p>Thank you sincerely for your generous donation to our charity. 
-        Your contribution will make a meaningful difference and help us continue supporting those in need.</p>
-      <p><strong>Reference:</strong> ${payment.reference}</p>
-      <br/>
-      <p>We deeply appreciate your support and commitment to our mission.</p>
-      <p>Warm regards,<br/>The NIHI Team</p>
+      
+      <p>On behalf of our entire team, thank you for your generosity. Your contribution helps us continue our mission of supporting those in need and creating meaningful impact in our community.</p>
+      
+      <p><strong>Transaction Reference:</strong> ${payment.reference}</p>
+      
+      <p style="margin-top: 20px;">We deeply appreciate your trust and commitment. Together, we are making a difference.</p>
+      
+      <p style="margin-top: 30px;">With gratitude,<br/><strong>The NIHI Team</strong></p>
+      
+      <hr style="margin: 30px 0; border: none; border-top: 1px solid #ddd;" />
+      
+      <p style="font-size: 12px; color: #777; text-align: center;">
+        This email serves as an official confirmation of your donation. 
+        Please retain it for your records.
+      </p>
     </div>
   `,
       });
+
 
       return res.status(200).json({ message: "Payment verified successfully" });
     } else {
