@@ -2,7 +2,7 @@
 import PaymentLink from "../models/paymentLink.model.js";
 import User from "../models/user.model.js";
 import Item from "../models/item.model.js";
-import Payment from "../models/Payment.model.js";
+import Payment from "../models/payment.model.js";
 import { sendEmail } from "../utils/sendEmail.js";
 
 export const getUsers = async (req, res) => {

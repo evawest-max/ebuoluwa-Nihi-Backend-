@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 dotenv.config();
-import Payment from "../models/Payment.model.js";
+import Payment from "../models/payment.model.js";
 import donationPayment from "../models/financialDonationsTransactions.model.js";
 
 //fetch all payment transactions

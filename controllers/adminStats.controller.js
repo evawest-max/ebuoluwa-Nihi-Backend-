@@ -1,7 +1,7 @@
 // controllers/adminStats.controller.js
 import User from "../models/user.model.js";
 import Item from "../models/item.model.js";
-import Payment from "../models/Payment.model.js";
+import Payment from "../models/payment.model.js";
 import ProofOfPayment from "../models/financialDonationsTransactions.model.js";
 import testimonyModel from "../models/testimony.model.js";
 

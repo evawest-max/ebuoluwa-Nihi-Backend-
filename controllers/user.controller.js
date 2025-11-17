@@ -1,5 +1,5 @@
 import Item from "../models/item.model.js";
-import Payment from "../models/Payment.model.js";
+import Payment from "../models/payment.model.js";
 import User from "../models/user.model.js";
 // import { encrypt } from "../utils/encrypt.js";
 import bcrypt from "bcryptjs";

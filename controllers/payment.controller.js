@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 import crypto from "crypto";
 import { sendEmail } from "../utils/sendEmail.js";
-import Paymentz from "../models/Payment.model.js";
+import Paymentz from "../models/payment.model.js";
 
 export const initializePayment = async (req, res) => {
   try {
