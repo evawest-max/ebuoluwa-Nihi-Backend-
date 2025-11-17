@@ -237,59 +237,58 @@ export const approveItemAdmin = async (req, res) => {
 export const rejectItemAdmin = async (req, res) => {
   try {
     const { id } = req.params;
+    const { reason } = req.body; // ✅ corrected
 
     const item = await Item.findById(id);
+    console.log(item.donor + ":" +item)
     if (!item) {
       return res.status(404).json({ message: "Item not found" });
     }
-    console.log("item:" + item.donor)
-    // ensure item.donor is a populated user object
-    let donordetail = null
+
+    // Fetch donor details
+    let donorUser;
     try {
-      const donorUser = await User.findById(item.donor);
+      donorUser = await User.findById(item.donor);
+      console.log (donorUser)
       if (!donorUser) {
-        return
+        return res.status(404).json({ message: "Seller or Donor not found" });
       }
-      donordetail = donorUser;
     } catch (err) {
       console.error("Error fetching donor:", err);
+      return res.status(500).json({ message: "Error fetching donor" });
     }
 
-    item.approved = false; // ✅ explicitly set approval to false
+    // Mark item as rejected
+    item.approved = false;
     await item.save();
-    // const donor = item.donor;
+
+    // Send rejection email
     try {
       await sendEmail({
-        to: donordetail.email,
-        subject: 'Update on Your Item Submission',
+        to: donorUser.email,
+        subject: "Update on Your Item Submission",
         html: `
-        <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; padding: 24px; max-width: 600px; margin: auto; border: 1px solid #e0e0e0; border-radius: 8px;">
-        <h2 style="color: #d32f2f;">Hi ${donordetail.name || "Dear"},</h2>
-
-        <p style="font-size: 16px;">
-          Thank you for submitting <strong>"${item.title}"</strong> to NIHI. After careful review, we regret to inform you that your item was not approved for listing at this time.
-        </p>
-
-        <p style="font-size: 15px;">
-          This decision may be due to item eligibility, condition, or current platform needs. We encourage you to review our guidelines and consider submitting again in the future.
-        </p>
-
-        <div style="margin: 20px 0; padding: 15px; background-color: #fbe9e7; border-left: 5px solid #ef9a9a;">
-          <p style="margin: 0; font-size: 14px;">
-            Have questions? Reach out to us at <a href="mailto:info@needithaveit.org">info@needithaveit.org</a>. We're here to help.
-          </p>
-        </div>
-
-        <p style="font-size: 15px;">We appreciate your generosity and your willingness to support others through NIHI.</p>
-
-        <p style="margin-top: 30px; font-size: 14px; color: #777;">Warm regards,<br><strong>The NIHI Team</strong></p>
-      </div>
-      `
+          <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; padding: 24px; max-width: 600px; margin: auto; border: 1px solid #e0e0e0; border-radius: 8px;">
+            <h2 style="color: #d32f2f;">Hi ${donorUser.name || "Dear"},</h2>
+            <p style="font-size: 16px;">
+              Thank you for submitting <strong>"${item.title}"</strong> to NIHI. After careful review, we regret to inform you that your item was not approved for listing at this time.
+            </p>
+            <p style="font-size: 15px;">
+              <strong>Reason:</strong> ${reason || "Not specified"}
+            </p>
+            <div style="margin: 20px 0; padding: 15px; background-color: #fbe9e7; border-left: 5px solid #ef9a9a;">
+              <p style="margin: 0; font-size: 14px;">
+                Have questions? Reach out to us at <a href="mailto:info@needithaveit.org">info@needithaveit.org</a>. We're here to help.
+              </p>
+            </div>
+            <p style="font-size: 15px;">We appreciate your generosity and your willingness to support others through NIHI.</p>
+            <p style="margin-top: 30px; font-size: 14px; color: #777;">Warm regards,<br><strong>The NIHI Team</strong></p>
+          </div>
+        `,
       });
     } catch (error) {
-      console.log("failed to send mail")
+      console.error("Failed to send rejection email:", error);
     }
-
 
     res.status(200).json({ message: "Item rejected successfully", item });
   } catch (err) {
@@ -297,6 +296,7 @@ export const rejectItemAdmin = async (req, res) => {
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
+
 
 
 export const deleteItemAdmin = async (req, res) => {
