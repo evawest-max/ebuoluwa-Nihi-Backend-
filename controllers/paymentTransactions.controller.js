@@ -1,9 +1,5 @@
-// import axios from "axios";
 import dotenv from 'dotenv';
 dotenv.config();
-// import Payment from "../models/payment.model.js";
-// import crypto from "crypto";
-// import { sendEmail } from "../utils/sendEmail.js";
 import payment from "../models/Payment.model.js";
 import donationPayment from "../models/financialDonationsTransactions.model.js";
 
@@ -63,6 +59,7 @@ export const deletePendingPaymentTransactions = async (req, res) => {
 
 //fetch all financial Donation payment transactions
 export const getAllDonationPaymentTransactions = async (req, res) => {
+    console.log("it is hiting backend")
   try {
     const payments = await donationPayment.find().sort({ createdAt: -1 });
     res.json(payments);

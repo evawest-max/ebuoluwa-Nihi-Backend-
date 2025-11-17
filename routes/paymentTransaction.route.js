@@ -9,7 +9,7 @@ router.post('/payments/delete-transaction//multiple', auth, isAdmin, deleteMulti
 router.delete('/payments/delete-transaction/pending', auth, isAdmin,  deletePendingPaymentTransactions);
 router.delete('/payments-transaction/:id', auth, isAdmin, deletePaymentTransaction);
 
-router.get('/payments/all-financial-donation/transactions', auth, isAdmin,  getAllDonationPaymentTransactions);
+router.get('/payments/all-financial-donation/transactions',   getAllDonationPaymentTransactions);
 router.post('/payments/delete-financial-donation/multiple', auth, isAdmin, deleteDonationMultiplePaymentTransactions);
 router.delete('/payments/delete-financial-donation/pending', auth, isAdmin,  deleteAllDonationPendingPaymentTransactions);
 router.delete('/payments/delete-financial-donation/:id', auth, isAdmin, deleteSingleDonationPaymentTransaction);
