@@ -1,7 +1,6 @@
 import axios from "axios";
 import dotenv from 'dotenv';
 dotenv.config();
-// import Payment from "../models/payment.model.js";
 import crypto from "crypto";
 import { sendEmail } from "../utils/sendEmail.js";
 import paymentz from "../models/financialDonationsTransactions.model.js";

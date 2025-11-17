@@ -1,12 +1,12 @@
 import dotenv from 'dotenv';
 dotenv.config();
-import payment from "../models/Payment.model.js";
+import Payment from "../models/Payment.model.js";
 import donationPayment from "../models/financialDonationsTransactions.model.js";
 
 //fetch all payment transactions
 export const getAllPaymentTransactions = async (req, res) => {
   try {
-    const payments = await payment.find().sort({ createdAt: -1 });
+    const payments = await Payment.find().sort({ createdAt: -1 });
     res.json(payments);
   } catch (error) {
     console.error(error);
@@ -19,7 +19,7 @@ export const deletePaymentTransaction = async (req, res) => {
   try {
     const { id } = req.params;
     console.log("item:"+ id)
-    const singlepayment = await payment.findByIdAndDelete(id);
+    const singlepayment = await Payment.findByIdAndDelete(id);
     if (!singlepayment) {
       return res.status(404).json({ message: 'Payment transaction not found' });
     }
@@ -34,7 +34,7 @@ export const deletePaymentTransaction = async (req, res) => {
 export const deleteMultiplePaymentTransactions = async (req, res) => {
   try {
     const { ids } = req.body;
-    await payment.deleteMany({ _id: { $in: ids } });
+    await Payment.deleteMany({ _id: { $in: ids } });
     res.json({ message: 'Payment transactions deleted successfully' });
   } catch (error) {
     console.error(error);
@@ -44,7 +44,7 @@ export const deleteMultiplePaymentTransactions = async (req, res) => {
 
 export const deletePendingPaymentTransactions = async (req, res) => {
   try {
-    const result = await payment.deleteMany({ status: 'pending' });
+    const result = await Payment.deleteMany({ status: 'pending' });
     res.json({
       message: 'Pending payment transactions deleted successfully',
       deletedCount: result.deletedCount,

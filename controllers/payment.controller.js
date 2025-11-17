@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 import crypto from "crypto";
 import { sendEmail } from "../utils/sendEmail.js";
-import paymentz from "../models/Payment.model.js";
+import Paymentz from "../models/Payment.model.js";
 
 export const initializePayment = async (req, res) => {
   try {
@@ -31,7 +31,7 @@ export const initializePayment = async (req, res) => {
     );
 
     // Save payment
-    await paymentz.create({
+    await Paymentz.create({
       userId: user.id,
       email,
       name: user.name,
@@ -71,7 +71,7 @@ export const verifyPayment = async (req, res) => {
     }
 
     // Find payment record in your database
-    let payment = await paymentz.findOne({ reference });
+    let payment = await Paymentz.findOne({ reference });
     if (!payment) {
       return res.status(404).json({ message: "Payment record not found" });
     }
@@ -128,7 +128,7 @@ export const paystackWebhook = async (req, res) => {
     if (event.event === "charge.success") {
       const data = event.data;
 
-      const payment = await paymentz.findOne({ reference: data.reference });
+      const payment = await Paymentz.findOne({ reference: data.reference });
       if (payment) {
         payment.status = "success";
         await payment.save();
