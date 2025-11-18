@@ -395,30 +395,22 @@ export const resetPassword = async (req, res) => {
 
 
 export const googleSignInController = async (req, res) => {
+  console.log("you called me")
   try {
     const { token } = req.body; // frontend sends { token: idToken }
-    console
+
     // Verify Google token
     const ticket = await client.verifyIdToken({
       idToken: token,
       audience: process.env.GOOGLE_CLIENT_ID,
     });
     const payload = ticket.getPayload();
-    const { sub: googleId, email, name, picture } = payload;
-    const hashedPassword = await bcrypt.hash("123456", 10);
+    const { email } = payload;
+
     // Check if user exists
-    let user = await User.findOne({ email });
+    const user = await User.findOne({ email });
     if (!user) {
-      // Create a new user if none found
-      user = await User.create({
-        accountType: "individual",
-        password: hashedPassword,
-        email,
-        name,
-        logo: picture,
-        Verified: false,
-        suspended: false,
-      });
+      return res.status(404).json({ message: "User not found" }); // ✅ stop execution
     }
 
     // Generate JWT
@@ -444,10 +436,11 @@ export const googleSignInController = async (req, res) => {
       },
     });
   } catch (err) {
-    console.error(err);
+    console.error("❌ Google Sign-In error:", err);
     res.status(400).json({ message: "Invalid Google token" });
   }
 };
+
 
 
 export const getCurrentUser = async (req, res) => {
